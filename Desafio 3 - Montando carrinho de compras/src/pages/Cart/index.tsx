@@ -22,19 +22,19 @@ const Cart = (): JSX.Element => {
 
   const cartFormatted = cart.map(product => ({
     ...product,
-    price: formatPrice(product.price)
+    price: formatPrice(product.price * product.amount)
   }))
-  // const total =
-  //   formatPrice(
-  //     cart.reduce((sumTotal, product) => {
-  //       // TODO
-  //     }, 0)
-  //   )
+  const total =
+    formatPrice(
+      cart.reduce((sumTotal, product) => {
+        return sumTotal + (product.price * product.amount)
+      }, 0)
+    )
 
   function handleProductIncrement(product: Product) {
     const productFormated = {
       productId: product.id,
-      amount: product.amount += 1,
+      amount: product.amount + 1,
     }
     updateProductAmount(productFormated)
   }
@@ -42,7 +42,7 @@ const Cart = (): JSX.Element => {
   function handleProductDecrement(product: Product) {
     const productFormated = {
       productId: product.id,
-      amount: product.amount <= 1 ? 1 : product.amount -= 1,
+      amount: product.amount <= 1 ? 1 : product.amount - 1,
     }
     updateProductAmount(productFormated)
   }
@@ -99,13 +99,13 @@ const Cart = (): JSX.Element => {
                 </div>
               </td>
               <td>
-                <strong>R$ 359,80</strong>
+                <strong>{item.price}</strong>
               </td>
               <td>
                 <button
                   type="button"
                   data-testid="remove-product"
-                onClick={() => handleRemoveProduct(item.id)}
+                  onClick={() => handleRemoveProduct(item.id)}
                 >
                   <MdDelete size={20} />
                 </button>
@@ -120,7 +120,7 @@ const Cart = (): JSX.Element => {
 
         <Total>
           <span>TOTAL</span>
-          <strong>R$ 359,80</strong>
+          <strong>{total}</strong>
         </Total>
       </footer>
     </Container>
